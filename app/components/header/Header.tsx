@@ -5,7 +5,7 @@ import { ShoppingCart, Menu, X, LogOut, ChefHat, Bookmark } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/app/store/hooks";
-import { signOut } from "next-auth/react";
+import { signOut,useSession} from "next-auth/react";
 import ConfirmationDialog from "@/app/components/confirmation-dialog/ConfirmationDialog";
 import { toast } from "react-toastify";
 
@@ -23,6 +23,7 @@ export default function SiteHeader() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession()
 
   const cartCount = useAppSelector((state) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
@@ -85,7 +86,9 @@ export default function SiteHeader() {
         </nav>
 
         {/* Right Actions */}
+        
         <div className="flex items-center gap-2">
+          <span className="text-white">{session?.user.name}</span>
           <Link
             href="/saved-recipes"
             aria-label="Saved recipes"
@@ -131,6 +134,7 @@ export default function SiteHeader() {
           </button> */}
 
           {/* Mobile Menu */}
+          
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
